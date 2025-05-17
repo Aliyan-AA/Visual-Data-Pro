@@ -1,12 +1,17 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from PIL import Image
 import plotly.express as px
 import plotly.graph_objects as go
 import random
+import yfinance as yf
+import ta
+from ta.trend import SMAIndicator, EMAIndicator
+from ta.momentum import RSIIndicator
+from ta.volatility import BollingerBands
 
 # Theme configurations
 THEMES = {
@@ -50,6 +55,95 @@ class GameState:
         self.game_over = False
         self.level_complete = False
 
+# Financial Analysis Functions
+def get_stock_data(ticker, period="1y"):
+    """Fetch stock data from Yahoo Finance"""
+    try:
+        stock = yf.Ticker(ticker)
+        df = stock.history(period=period)
+        return df
+    except Exception as e:
+        st.error(f"Error fetching data for {ticker}: {str(e)}")
+        return None
+
+def calculate_technical_indicators(df):
+    """Calculate technical indicators for the stock"""
+    if df is None or df.empty:
+        return None
+    
+    # Add technical indicators
+    df['SMA_20'] = SMAIndicator(close=df['Close'], window=20).sma_indicator()
+    df['SMA_50'] = SMAIndicator(close=df['Close'], window=50).sma_indicator()
+    df['EMA_20'] = EMAIndicator(close=df['Close'], window=20).ema_indicator()
+    
+    # RSI
+    df['RSI'] = RSIIndicator(close=df['Close']).rsi()
+    
+    # Bollinger Bands
+    bb = BollingerBands(close=df['Close'])
+    df['BB_upper'] = bb.bollinger_hband()
+    df['BB_middle'] = bb.bollinger_mavg()
+    df['BB_lower'] = bb.bollinger_lband()
+    
+    return df
+
+def plot_stock_analysis(df, ticker):
+    """Create interactive stock analysis plots"""
+    if df is None or df.empty:
+        return
+    
+    # Price and Moving Averages
+    fig1 = go.Figure()
+    fig1.add_trace(go.Candlestick(x=df.index,
+                                 open=df['Open'],
+                                 high=df['High'],
+                                 low=df['Low'],
+                                 close=df['Close'],
+                                 name='Price'))
+    fig1.add_trace(go.Scatter(x=df.index, y=df['SMA_20'],
+                             name='SMA 20',
+                             line=dict(color='blue')))
+    fig1.add_trace(go.Scatter(x=df.index, y=df['SMA_50'],
+                             name='SMA 50',
+                             line=dict(color='red')))
+    
+    fig1.update_layout(title=f'{ticker} Price and Moving Averages',
+                      yaxis_title='Price',
+                      xaxis_title='Date',
+                      template='plotly_white')
+    
+    # RSI
+    fig2 = go.Figure()
+    fig2.add_trace(go.Scatter(x=df.index, y=df['RSI'],
+                             name='RSI',
+                             line=dict(color='purple')))
+    fig2.add_hline(y=70, line_dash="dash", line_color="red")
+    fig2.add_hline(y=30, line_dash="dash", line_color="green")
+    
+    fig2.update_layout(title='Relative Strength Index (RSI)',
+                      yaxis_title='RSI',
+                      xaxis_title='Date',
+                      template='plotly_white')
+    
+    # Bollinger Bands
+    fig3 = go.Figure()
+    fig3.add_trace(go.Scatter(x=df.index, y=df['Close'],
+                             name='Price',
+                             line=dict(color='black')))
+    fig3.add_trace(go.Scatter(x=df.index, y=df['BB_upper'],
+                             name='Upper Band',
+                             line=dict(color='gray', dash='dash')))
+    fig3.add_trace(go.Scatter(x=df.index, y=df['BB_lower'],
+                             name='Lower Band',
+                             line=dict(color='gray', dash='dash')))
+    
+    fig3.update_layout(title='Bollinger Bands',
+                      yaxis_title='Price',
+                      xaxis_title='Date',
+                      template='plotly_white')
+    
+    return fig1, fig2, fig3
+
 # Initialize session state variables
 if 'current_theme' not in st.session_state:
     st.session_state.current_theme = "Angry Birds"
@@ -65,10 +159,12 @@ if 'unlocked_levels' not in st.session_state:
     st.session_state.unlocked_levels = [1]
 if 'game_state' not in st.session_state:
     st.session_state.game_state = GameState()
+if 'selected_stock' not in st.session_state:
+    st.session_state.selected_stock = "AAPL"
 
 # Set page configuration
 st.set_page_config(
-    page_title="Angry Birds Learning Adventure",
+    page_title="Angry Birds Financial Adventure",
     page_icon="🐦",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -114,47 +210,26 @@ def apply_theme_style():
             overflow: hidden;
         }}
         
-        .bird {{
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            transition: all 0.1s linear;
-        }}
-        
-        .target {{
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: {theme_config['accent_color']};
-            border-radius: 50%;
-        }}
-        
-        .obstacle {{
-            position: absolute;
-            background-color: {theme_config['secondary_color']};
-            border-radius: 5px;
-        }}
-        
-        .power-meter {{
-            width: 100%;
-            height: 20px;
-            background-color: #ddd;
-            border-radius: 10px;
+        .analysis-container {{
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
             margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }}
         
-        .power-fill {{
-            height: 100%;
-            background-color: {theme_config['primary_color']};
-            border-radius: 10px;
-            transition: width 0.1s linear;
+        .stock-card {{
+            background-color: {theme_config['secondary_color']};
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
         }}
         
-        .angle-indicator {{
-            position: absolute;
-            width: 2px;
-            background-color: {theme_config['text_color']};
-            transform-origin: bottom center;
+        .indicator-value {{
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: {theme_config['primary_color']};
         }}
         
         .level-card {{
@@ -294,6 +369,17 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
+    # Stock selection
+    st.markdown("### 📈 Stock Selection")
+    ticker = st.text_input("Enter Stock Ticker", value=st.session_state.selected_stock)
+    if ticker:
+        st.session_state.selected_stock = ticker.upper()
+    
+    # Time period selection
+    period = st.selectbox("Select Time Period",
+                         ["1mo", "3mo", "6mo", "1y", "2y", "5y"],
+                         index=3)
+    
     # Score display
     st.markdown(f"""
     <div class="score-display">
@@ -315,17 +401,53 @@ with st.sidebar:
             st.button(f"Level {level} 🔒", disabled=True, key=f"level_{level}")
 
 # Main content
-st.markdown("<h1 style='text-align: center; color: #FF6B6B;'>Angry Birds Learning Adventure</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #FF6B6B;'>Angry Birds Financial Adventure</h1>", unsafe_allow_html=True)
 
-# Level display
-st.markdown(f"""
-<div style="text-align: center; margin: 20px 0;">
-    <h2 style="color: {THEMES['Angry Birds']['primary_color']};">Level {st.session_state.current_level}</h2>
-</div>
-""", unsafe_allow_html=True)
+# Stock Analysis Section
+st.markdown("### 📊 Stock Analysis")
+df = get_stock_data(st.session_state.selected_stock, period)
+if df is not None:
+    df = calculate_technical_indicators(df)
+    
+    # Display current stock information
+    current_price = df['Close'].iloc[-1]
+    price_change = df['Close'].iloc[-1] - df['Close'].iloc[-2]
+    percent_change = (price_change / df['Close'].iloc[-2]) * 100
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Current Price", f"${current_price:.2f}",
+                 f"{price_change:.2f} ({percent_change:.2f}%)")
+    with col2:
+        st.metric("RSI", f"{df['RSI'].iloc[-1]:.2f}")
+    with col3:
+        st.metric("SMA 20", f"{df['SMA_20'].iloc[-1]:.2f}")
+    
+    # Display stock analysis plots
+    fig1, fig2, fig3 = plot_stock_analysis(df, st.session_state.selected_stock)
+    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig3, use_container_width=True)
+    
+    # Trading signals
+    st.markdown("### 🎯 Trading Signals")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        rsi_signal = "Oversold" if df['RSI'].iloc[-1] < 30 else "Overbought" if df['RSI'].iloc[-1] > 70 else "Neutral"
+        st.metric("RSI Signal", rsi_signal)
+    
+    with col2:
+        bb_signal = "Oversold" if df['Close'].iloc[-1] < df['BB_lower'].iloc[-1] else "Overbought" if df['Close'].iloc[-1] > df['BB_upper'].iloc[-1] else "Neutral"
+        st.metric("Bollinger Bands Signal", bb_signal)
+    
+    with col3:
+        ma_signal = "Bullish" if df['SMA_20'].iloc[-1] > df['SMA_50'].iloc[-1] else "Bearish"
+        st.metric("Moving Average Signal", ma_signal)
 
-# Game interface
-st.markdown(f"""
+# Game Section
+st.markdown("### 🎮 Trading Game")
+st.markdown("""
 <div class="game-container">
     <div class="bird" style="left: {st.session_state.game_state.bird_position[0]}px; 
                             top: {st.session_state.game_state.bird_position[1]}px;">
@@ -403,10 +525,10 @@ elif st.session_state.current_level == 2:
 
 # Game controls
 if not st.session_state.game_state.is_launched and not st.session_state.game_state.game_over:
-    st.session_state.game_state.power = st.slider("Power", 0, 100, 50)
-    st.session_state.game_state.angle = st.slider("Angle", 0, 90, 45)
+    st.session_state.game_state.power = st.slider("Investment Amount", 0, 100, 50)
+    st.session_state.game_state.angle = st.slider("Risk Level", 0, 90, 45)
     
-    if st.button("Launch!", use_container_width=True):
+    if st.button("Make Trade!", use_container_width=True):
         launch_bird()
 
 # Game state update
@@ -433,7 +555,7 @@ if st.session_state.game_state.level_complete:
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #666;">
-    <p>Created with ❤️ by Angry Birds Learning Team</p>
-    <p>© 2024 Angry Birds Learning Adventure</p>
+    <p>Created with ❤️ by Angry Birds Financial Team</p>
+    <p>© 2024 Angry Birds Financial Adventure</p>
 </div>
 """, unsafe_allow_html=True)
