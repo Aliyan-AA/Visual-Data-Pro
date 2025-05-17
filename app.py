@@ -18,101 +18,29 @@ from utils import load_animation_url, validate_stock_ticker, show_notification
 
 # Theme configurations
 THEMES = {
-    "Mission Impossible": {
-        "primary_color": "#FF4B4B",
-        "secondary_color": "#1E1E1E",
-        "background_color": "#0A0A0A",
-        "text_color": "#FFFFFF",
-        "accent_color": "#00FF00",
-        "font": "Orbitron",
+    "Angry Birds": {
+        "primary_color": "#FF6B6B",  # Red Bird color
+        "secondary_color": "#4ECDC4",  # Blue Bird color
+        "background_color": "#F7F9FC",  # Light sky blue
+        "text_color": "#2D3436",  # Dark gray for readability
+        "accent_color": "#FFD93D",  # Yellow Bird color
+        "font": "Comic Sans MS",  # Child-friendly font
         "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
         "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
         "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
-    },
-    "James Bond": {
-        "primary_color": "#FFD700",
-        "secondary_color": "#000000",
-        "background_color": "#1A1A1A",
-        "text_color": "#FFFFFF",
-        "accent_color": "#FF0000",
-        "font": "Playfair Display",
-        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
-    },
-    "Matrix": {
-        "primary_color": "#00FF00",
-        "secondary_color": "#000000",
-        "background_color": "#0A0A0A",
-        "text_color": "#00FF00",
-        "accent_color": "#FFFFFF",
-        "font": "Courier New",
-        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
-    },
-    "John Wick": {
-        "primary_color": "#FF0000",
-        "secondary_color": "#1A1A1A",
-        "background_color": "#000000",
-        "text_color": "#FFFFFF",
-        "accent_color": "#FFD700",
-        "font": "Roboto",
-        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
-    },
-    "Die Hard": {
-        "primary_color": "#FFA500",
-        "secondary_color": "#2C2C2C",
-        "background_color": "#1A1A1A",
-        "text_color": "#FFFFFF",
-        "accent_color": "#FF4500",
-        "font": "Impact",
-        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
-    },
-    "Terminator": {
-        "primary_color": "#FF0000",
-        "secondary_color": "#000000",
-        "background_color": "#1A1A1A",
-        "text_color": "#FFFFFF",
-        "accent_color": "#808080",
-        "font": "Orbitron",
-        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
-    },
-    "Mad Max": {
-        "primary_color": "#FFD700",
-        "secondary_color": "#8B4513",
-        "background_color": "#2C2C2C",
-        "text_color": "#FFFFFF",
-        "accent_color": "#FF4500",
-        "font": "Road Rage",
-        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
-    },
-    "Fast & Furious": {
-        "primary_color": "#FF0000",
-        "secondary_color": "#000000",
-        "background_color": "#1A1A1A",
-        "text_color": "#FFFFFF",
-        "accent_color": "#FFD700",
-        "font": "Racing Sans One",
-        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
-        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "characters": {
+            "red": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+            "blue": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+            "yellow": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+            "black": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+            "white": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+        },
+        "stages": {
+            "poached_eggs": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+            "mighty_hoax": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+            "danger_above": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+        }
     }
 }
 
@@ -173,194 +101,214 @@ def show_notification(type, message):
         </div>
         """, unsafe_allow_html=True)
 
-def show_loading_animation(message="Processing..."):
-    """Show a themed loading animation"""
+def show_loading_animation(message="Loading..."):
+    """Show a themed loading animation with Angry Birds characters"""
     theme = st.session_state.current_theme
     theme_config = THEMES[theme]
     
     st.markdown(f"""
-    <div style="background-color: {theme_config['secondary_color']}; 
+    <div class="loading-container">
+        <img src="{theme_config['loading_gif']}" alt="Loading...">
+        <div class="loading-text">{message}</div>
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            <img src="{theme_config['characters']['red']}" alt="Red Bird">
+            <img src="{theme_config['characters']['blue']}" alt="Blue Bird">
+            <img src="{theme_config['characters']['yellow']}" alt="Yellow Bird">
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+def show_success_animation(message="Success!"):
+    """Show a themed success animation with Angry Birds characters"""
+    theme = st.session_state.current_theme
+    theme_config = THEMES[theme]
+    
+    st.markdown(f"""
+    <div class="loading-container" style="background-color: #E8F5E9;">
+    <div style="background-color: #E8F5E9; 
                 padding: 20px; 
-                margin: 10px 0; 
-                border-radius: 8px;
+                border-radius: 15px; 
+                margin: 20px 0;
                 text-align: center;">
-        <img src="{theme_config['loading_gif']}" 
-             style="width: 100px; height: 100px; border-radius: 10px; margin-bottom: 15px;">
-        <h4 style="color: {theme_config['primary_color']}; margin: 0;">{message}</h4>
+        <img src="{theme_config['success_gif']}" 
+             style="width: 100px; height: 100px; border-radius: 50%; margin: 10px auto;">
+        <h3 style="color: #2E7D32; margin: 10px 0;">{message}</h3>
+        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+            <img src="{theme_config['characters']['red']}" style="width: 40px; height: 40px; border-radius: 50%;">
+            <img src="{theme_config['characters']['blue']}" style="width: 40px; height: 40px; border-radius: 50%;">
+            <img src="{theme_config['characters']['yellow']}" style="width: 40px; height: 40px; border-radius: 50%;">
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+def show_error_animation(message="Oops! Something went wrong."):
+    """Show a themed error animation with Angry Birds characters"""
+    theme = st.session_state.current_theme
+    theme_config = THEMES[theme]
+    
+    st.markdown(f"""
+    <div style="background-color: #FFEBEE; 
+                padding: 20px; 
+                border-radius: 15px; 
+                margin: 20px 0;
+                text-align: center;">
+        <img src="{theme_config['characters']['black']}" 
+             style="width: 100px; height: 100px; border-radius: 50%; margin: 10px auto;">
+        <h3 style="color: #C62828; margin: 10px 0;">{message}</h3>
+        <p style="color: #B71C1C; margin: 5px 0;">Don't worry! Let's try again!</p>
     </div>
     """, unsafe_allow_html=True)
 
 # Initialize session state for theme if not exists
 if 'current_theme' not in st.session_state:
-    st.session_state.current_theme = "Mission Impossible"
+    st.session_state.current_theme = "Angry Birds"
 
-# Set page configuration with professional layout
+# Set page configuration with child-friendly layout
 st.set_page_config(
-    page_title="Financial ML Pipeline Pro",
-    page_icon="📈",
+    page_title="Angry Birds Learning Adventure",
+    page_icon="🐦",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Apply custom CSS for theme-based styling
-def apply_theme_style(theme):
+# Apply custom CSS for child-friendly styling
+def apply_theme_style():
+    """Apply custom CSS based on the selected theme"""
+    theme = st.session_state.current_theme
     theme_config = THEMES[theme]
-    st.markdown(f"""
+    
+    css = f"""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family={theme_config['font'].replace(' ', '+')}&display=swap');
-        
-        /* Main interface styling */
-        .main .block-container {{
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-            background-color: {theme_config['background_color']};
-            color: {theme_config['text_color']};
-            font-family: '{theme_config['font']}', sans-serif;
-        }}
-        
-        /* Sidebar styling */
-        section[data-testid="stSidebar"] {{
+        .loading-container {{
             background-color: {theme_config['secondary_color']};
-            color: {theme_config['text_color']};
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            text-align: center;
         }}
         
-        /* Button styling */
-        .stButton > button {{
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            background-color: {theme_config['primary_color']};
-            color: {theme_config['text_color']};
-            border: 2px solid {theme_config['accent_color']};
-        }}
-        
-        .stButton > button:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px {theme_config['accent_color']};
-        }}
-        
-        /* Card styling */
-        div.stAlert {{
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            background-color: {theme_config['secondary_color']};
-            color: {theme_config['text_color']};
-        }}
-        
-        /* Headers & Text */
-        h1, h2, h3 {{
+        .loading-text {{
             color: {theme_config['primary_color']};
-            font-family: '{theme_config['font']}', sans-serif;
+            font-family: {theme_config['font']}, cursive;
+            font-size: 20px;
+            margin: 10px 0;
         }}
         
-        h4, h5, h6 {{
-            color: {theme_config['accent_color']};
-            font-family: '{theme_config['font']}', sans-serif;
+        .loading-container img {{
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 10px;
+            transition: transform 0.3s;
         }}
         
-        /* Metric styling */
-        [data-testid="stMetricValue"] {{
-            font-weight: bold;
-            color: {theme_config['primary_color']};
-        }}
-        
-        /* Container styling */
-        div.stTabs [data-baseweb="tab-panel"] {{
-            padding-top: 1rem;
-            background-color: {theme_config['background_color']};
-        }}
-        
-        /* Plotly chart styling */
-        div[data-testid="stPlotlyChart"] {{
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-            background-color: {theme_config['secondary_color']};
-        }}
-        
-        /* Animation styling */
-        .animation-container {{
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }}
-        
-        .animation-container img {{
-            border-radius: 10px;
-            box-shadow: 0 4px 8px {theme_config['accent_color']};
-        }}
-        
-        /* Theme-specific animations */
-        .theme-animation {{
-            width: 100%;
-            max-width: 500px;
-            margin: 20px auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px {theme_config['accent_color']};
+        .loading-container img:hover {{
+            transform: scale(1.1);
         }}
     </style>
-    """, unsafe_allow_html=True)
+    """
+    
+    st.markdown(css, unsafe_allow_html=True)
 
 # Apply the current theme
-apply_theme_style(st.session_state.current_theme)
+apply_theme_style()
 
 # Add theme selector in the sidebar
 with st.sidebar:
-    st.markdown("<div style='text-align: center; margin-bottom: 20px;'>", unsafe_allow_html=True)
-    st.markdown("<h2 style='color: #1E88E5;'>ML Pipeline Navigator</h2>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Theme selector
     st.markdown("### 🎨 Theme Selector")
     
     # Theme descriptions
     theme_descriptions = {
-        "Mission Impossible": "High-tech espionage theme with red accents and futuristic fonts",
-        "James Bond": "Classic spy theme with gold and black, featuring elegant typography",
-        "Matrix": "Cyberpunk theme with green-on-black and digital fonts",
-        "John Wick": "Intense action theme with red and gold accents",
-        "Die Hard": "Classic action theme with orange and dark accents",
-        "Terminator": "Futuristic theme with red and metallic accents",
-        "Mad Max": "Post-apocalyptic theme with desert colors and rugged fonts",
-        "Fast & Furious": "High-octane racing theme with red and gold accents"
+        "Angry Birds": "Join the Angry Birds on an exciting learning adventure! Choose your favorite bird and start exploring!"
     }
     
     # Create a more visually appealing theme selector
     st.markdown("""
-    <div style="background-color: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <p style="margin: 0; font-size: 0.9rem;">Choose your preferred action movie theme to customize the app's appearance.</p>
+    <div style="background-color: rgba(255,255,255,0.9); padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+        <p style="margin: 0; font-size: 1.1rem; color: #FF6B6B;">Choose your favorite Angry Bird character!</p>
     </div>
     """, unsafe_allow_html=True)
     
-    selected_theme = st.selectbox(
-        "Select Theme:",
-        list(THEMES.keys()),
-        index=list(THEMES.keys()).index(st.session_state.current_theme)
+    # Character selection
+    character = st.radio(
+        "Select your character:",
+        ["Red Bird", "Blue Bird", "Yellow Bird", "Black Bird", "White Bird"],
+        horizontal=True
     )
     
-    if selected_theme != st.session_state.current_theme:
-        st.session_state.current_theme = selected_theme
-        apply_theme_style(selected_theme)
-        st.rerun()
-    
-    # Display theme preview and description
+    # Display character preview
     st.markdown(f"""
-    <div style="background-color: {THEMES[selected_theme]['secondary_color']}; 
+    <div style="background-color: white; 
                 padding: 15px; 
-                border-radius: 8px; 
-                margin-top: 15px;">
-        <h4 style="color: {THEMES[selected_theme]['primary_color']}; margin-top: 0;">Theme Preview</h4>
-        <img src="{THEMES[selected_theme]['background_gif']}" 
-             style="width: 100%; border-radius: 5px; margin-bottom: 10px;">
-        <p style="color: {THEMES[selected_theme]['text_color']}; 
-                  font-size: 0.9rem; 
+                border-radius: 15px; 
+                margin-top: 15px;
+                text-align: center;">
+        <h4 style="color: #FF6B6B; margin-top: 0;">Your Character</h4>
+        <img src="{THEMES['Angry Birds']['characters'][character.lower().split()[0]]}" 
+             style="width: 100px; height: 100px; border-radius: 50%; margin: 10px auto;">
+        <p style="color: #2D3436; 
+                  font-size: 1.1rem; 
                   margin: 0;">
-            {theme_descriptions[selected_theme]}
+            {character}
         </p>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
+
+# Show welcome animation in the beginning
+if st.session_state.step == 0:
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-header'>Welcome to the Angry Birds Learning Adventure!</div>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.markdown("""
+        <div style='font-size: 1.2rem; line-height: 1.6; font-family: "Comic Sans MS", sans-serif;'>
+        Join the Angry Birds on an exciting learning journey:
+        
+        <ol style='margin-left: 1.5rem;'>
+            <li><span style='color: #FF6B6B;'>🎯</span> Learn with your favorite Angry Birds characters</li>
+            <li><span style='color: #4ECDC4;'>📚</span> Explore fun and interactive lessons</li>
+            <li><span style='color: #FFD93D;'>🎮</span> Play educational games</li>
+            <li><span style='color: #FF6B6B;'>🏆</span> Earn stars and achievements</li>
+            <li><span style='color: #4ECDC4;'>🌟</span> Complete challenges and unlock new levels</li>
+        </ol>
+        
+        <p style='margin-top: 1rem;'>Get ready for an amazing adventure with the Angry Birds!</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        # Display Angry Birds GIF
+        st.markdown(f"""
+        <div style="text-align: center;">
+            <img src="{THEMES['Angry Birds']['stages']['poached_eggs']}" 
+                 style="width: 100%; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Add quick start guide
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-header'>Quick Start Guide</div>", unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style='display: flex; gap: 20px; flex-wrap: wrap;'>
+        <div style='flex: 1; min-width: 200px; background-color: #FFE5E5; padding: 15px; border-radius: 15px;'>
+            <h4 style='color: #FF6B6B;'>🐦 Choose Your Bird</h4>
+            <p>Select your favorite Angry Birds character to start your adventure!</p>
+        </div>
+        <div style='flex: 1; min-width: 200px; background-color: #E5F9F6; padding: 15px; border-radius: 15px;'>
+            <h4 style='color: #4ECDC4;'>🎯 Start Learning</h4>
+            <p>Begin your journey with fun and interactive lessons!</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # Initialize session state variables if they don't exist
 if 'data' not in st.session_state:
@@ -404,57 +352,6 @@ if 'model_results_by_dataset' not in st.session_state:
 
 # Main app header
 st.markdown("<div class='main-header'>Financial Machine Learning Pipeline Pro</div>", unsafe_allow_html=True)
-
-# Show welcome animation in the beginning
-if st.session_state.step == 0:
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("<div class='sub-header'>Welcome to the Financial ML Pipeline App!</div>", unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("""
-        <div style='font-size: 1.1rem; line-height: 1.6;'>
-        This professional application guides you through a complete machine learning pipeline for financial data analysis:
-        
-        <ol style='margin-left: 1.5rem;'>
-            <li><span class='highlight'>Load financial data</span> from Kragle datasets or Yahoo Finance</li>
-            <li><span class='highlight'>Preprocess and clean</span> your data</li>
-            <li><span class='highlight'>Engineer relevant features</span> for better model performance</li>
-            <li><span class='highlight'>Split data</span> into training and testing sets</li>
-            <li><span class='highlight'>Train</span> a machine learning model</li>
-            <li><span class='highlight'>Evaluate model performance</span> with metrics and visualizations</li>
-            <li><span class='highlight'>Visualize results</span> and predictions</li>
-        </ol>
-        
-        <p style='margin-top: 1rem;'>This intuitive pipeline helps you identify patterns and make predictions using financial data.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        # Display finance GIF
-        st.markdown(f"<img src='{load_animation_url('finance')}' width='100%' style='border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'>", unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Add quick start guide
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("<div class='sub-header'>Quick Start Guide</div>", unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div style='display: flex; gap: 20px; flex-wrap: wrap;'>
-        <div style='flex: 1; min-width: 200px; background-color: #E3F2FD; padding: 15px; border-radius: 5px;'>
-            <h4 style='color: #1E88E5;'>📈 Yahoo Finance Data</h4>
-            <p>Enter a stock ticker (e.g., AAPL, MSFT) to analyze stock market data and predict future prices.</p>
-        </div>
-        <div style='flex: 1; min-width: 200px; background-color: #E8F5E9; padding: 15px; border-radius: 5px;'>
-            <h4 style='color: #43A047;'>📊 Custom Datasets</h4>
-            <p>Upload your own CSV files to perform custom financial analysis using machine learning.</p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # Sidebar for navigation and parameters
 with st.sidebar:
