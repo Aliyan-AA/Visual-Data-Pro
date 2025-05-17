@@ -6,6 +6,7 @@ import time
 from PIL import Image
 import plotly.express as px
 import plotly.graph_objects as go
+import random
 
 # Theme configurations
 THEMES = {
@@ -35,6 +36,20 @@ THEMES = {
     }
 }
 
+# Game mechanics
+class GameState:
+    def __init__(self):
+        self.bird_position = [0, 0]  # [x, y]
+        self.bird_velocity = [0, 0]  # [vx, vy]
+        self.target_position = [0, 0]
+        self.obstacles = []
+        self.score = 0
+        self.power = 0
+        self.angle = 0
+        self.is_launched = False
+        self.game_over = False
+        self.level_complete = False
+
 # Initialize session state variables
 if 'current_theme' not in st.session_state:
     st.session_state.current_theme = "Angry Birds"
@@ -48,6 +63,8 @@ if 'stars' not in st.session_state:
     st.session_state.stars = 0
 if 'unlocked_levels' not in st.session_state:
     st.session_state.unlocked_levels = [1]
+if 'game_state' not in st.session_state:
+    st.session_state.game_state = GameState()
 
 # Set page configuration
 st.set_page_config(
@@ -86,6 +103,60 @@ def apply_theme_style():
             background-color: {theme_config['accent_color']};
         }}
         
+        .game-container {{
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }}
+        
+        .bird {{
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            transition: all 0.1s linear;
+        }}
+        
+        .target {{
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: {theme_config['accent_color']};
+            border-radius: 50%;
+        }}
+        
+        .obstacle {{
+            position: absolute;
+            background-color: {theme_config['secondary_color']};
+            border-radius: 5px;
+        }}
+        
+        .power-meter {{
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            margin: 10px 0;
+        }}
+        
+        .power-fill {{
+            height: 100%;
+            background-color: {theme_config['primary_color']};
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }}
+        
+        .angle-indicator {{
+            position: absolute;
+            width: 2px;
+            background-color: {theme_config['text_color']};
+            transform-origin: bottom center;
+        }}
+        
         .level-card {{
             background-color: white;
             border-radius: 15px;
@@ -122,6 +193,78 @@ def apply_theme_style():
 
 # Apply the theme
 apply_theme_style()
+
+# Game functions
+def initialize_level(level):
+    game_state = st.session_state.game_state
+    game_state.bird_position = [50, 200]
+    game_state.bird_velocity = [0, 0]
+    game_state.is_launched = False
+    game_state.game_over = False
+    game_state.level_complete = False
+    
+    if level == 1:
+        game_state.target_position = [400, 200]
+        game_state.obstacles = [
+            {"x": 300, "y": 150, "width": 20, "height": 100},
+            {"x": 350, "y": 200, "width": 20, "height": 100}
+        ]
+    elif level == 2:
+        game_state.target_position = [500, 150]
+        game_state.obstacles = [
+            {"x": 300, "y": 100, "width": 20, "height": 150},
+            {"x": 400, "y": 200, "width": 20, "height": 100},
+            {"x": 450, "y": 150, "width": 20, "height": 150}
+        ]
+
+def update_game_state():
+    game_state = st.session_state.game_state
+    if game_state.is_launched:
+        # Update bird position based on velocity
+        game_state.bird_position[0] += game_state.bird_velocity[0]
+        game_state.bird_position[1] += game_state.bird_velocity[1]
+        
+        # Apply gravity
+        game_state.bird_velocity[1] += 0.5
+        
+        # Check collisions
+        check_collisions()
+        
+        # Check if bird is out of bounds
+        if (game_state.bird_position[0] > 600 or 
+            game_state.bird_position[0] < 0 or 
+            game_state.bird_position[1] > 400 or 
+            game_state.bird_position[1] < 0):
+            game_state.game_over = True
+
+def check_collisions():
+    game_state = st.session_state.game_state
+    bird_x, bird_y = game_state.bird_position
+    
+    # Check target collision
+    target_x, target_y = game_state.target_position
+    if (abs(bird_x - target_x) < 30 and 
+        abs(bird_y - target_y) < 30):
+        game_state.level_complete = True
+        st.session_state.score += 100
+        st.session_state.stars += 1
+        if st.session_state.current_level + 1 not in st.session_state.unlocked_levels:
+            st.session_state.unlocked_levels.append(st.session_state.current_level + 1)
+    
+    # Check obstacle collisions
+    for obstacle in game_state.obstacles:
+        if (bird_x > obstacle["x"] and 
+            bird_x < obstacle["x"] + obstacle["width"] and
+            bird_y > obstacle["y"] and 
+            bird_y < obstacle["y"] + obstacle["height"]):
+            game_state.game_over = True
+
+def launch_bird():
+    game_state = st.session_state.game_state
+    if not game_state.is_launched:
+        game_state.is_launched = True
+        game_state.bird_velocity[0] = game_state.power * np.cos(np.radians(game_state.angle))
+        game_state.bird_velocity[1] = -game_state.power * np.sin(np.radians(game_state.angle))
 
 # Sidebar
 with st.sidebar:
@@ -167,6 +310,7 @@ with st.sidebar:
         if level in st.session_state.unlocked_levels:
             if st.button(f"Level {level}", key=f"level_{level}"):
                 st.session_state.current_level = level
+                initialize_level(level)
         else:
             st.button(f"Level {level} 🔒", disabled=True, key=f"level_{level}")
 
@@ -177,6 +321,20 @@ st.markdown("<h1 style='text-align: center; color: #FF6B6B;'>Angry Birds Learnin
 st.markdown(f"""
 <div style="text-align: center; margin: 20px 0;">
     <h2 style="color: {THEMES['Angry Birds']['primary_color']};">Level {st.session_state.current_level}</h2>
+</div>
+""", unsafe_allow_html=True)
+
+# Game interface
+st.markdown(f"""
+<div class="game-container">
+    <div class="bird" style="left: {st.session_state.game_state.bird_position[0]}px; 
+                            top: {st.session_state.game_state.bird_position[1]}px;">
+        <img src="{THEMES['Angry Birds']['characters'][st.session_state.selected_character.lower().split()[0]]}" 
+             style="width: 100%; height: 100%;">
+    </div>
+    <div class="target" style="left: {st.session_state.game_state.target_position[0]}px; 
+                              top: {st.session_state.game_state.target_position[1]}px;">
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -207,19 +365,10 @@ if st.session_state.current_level == 1:
     with col2:
         st.markdown("### 🎮 Controls")
         st.markdown("""
-        - Click and drag to aim
-        - Release to launch
-        - Use special powers when available
+        - Adjust power and angle
+        - Click Launch to send your bird flying
+        - Avoid obstacles and hit the target
         """)
-    
-    # Game interface
-    st.markdown("### 🎮 Play Now!")
-    if st.button("Start Level 1", use_container_width=True):
-        st.session_state.score += 100
-        st.session_state.stars += 1
-        if 2 not in st.session_state.unlocked_levels:
-            st.session_state.unlocked_levels.append(2)
-        st.success("Level 1 completed! Level 2 unlocked! 🌟")
 
 elif st.session_state.current_level == 2:
     st.markdown("""
@@ -251,17 +400,34 @@ elif st.session_state.current_level == 2:
         - Time your shots carefully
         - Look for weak points
         """)
-    
-    # Game interface
-    st.markdown("### 🎮 Play Now!")
-    if st.button("Start Level 2", use_container_width=True):
-        st.session_state.score += 200
-        st.session_state.stars += 2
-        if 3 not in st.session_state.unlocked_levels:
-            st.session_state.unlocked_levels.append(3)
-        st.success("Level 2 completed! Level 3 unlocked! 🌟🌟")
 
-# Add more levels as needed...
+# Game controls
+if not st.session_state.game_state.is_launched and not st.session_state.game_state.game_over:
+    st.session_state.game_state.power = st.slider("Power", 0, 100, 50)
+    st.session_state.game_state.angle = st.slider("Angle", 0, 90, 45)
+    
+    if st.button("Launch!", use_container_width=True):
+        launch_bird()
+
+# Game state update
+if st.session_state.game_state.is_launched:
+    update_game_state()
+    time.sleep(0.1)
+    st.experimental_rerun()
+
+# Game messages
+if st.session_state.game_state.game_over:
+    st.error("Game Over! Try again!")
+    if st.button("Restart Level", use_container_width=True):
+        initialize_level(st.session_state.current_level)
+        st.experimental_rerun()
+
+if st.session_state.game_state.level_complete:
+    st.success(f"Level {st.session_state.current_level} completed! 🌟")
+    if st.button("Next Level", use_container_width=True):
+        st.session_state.current_level += 1
+        initialize_level(st.session_state.current_level)
+        st.experimental_rerun()
 
 # Footer
 st.markdown("---")
@@ -270,4 +436,4 @@ st.markdown("""
     <p>Created with ❤️ by Angry Birds Learning Team</p>
     <p>© 2024 Angry Birds Learning Adventure</p>
 </div>
-""", unsafe_allow_html=True) 
+""", unsafe_allow_html=True)
