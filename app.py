@@ -16,7 +16,185 @@ from ml_pipeline import preprocess_data, feature_engineering, split_data, train_
 from visualizations import plot_missing_values, plot_split, plot_feature_importance, plot_regression_results, plot_classification_results, plot_clusters
 from utils import load_animation_url, validate_stock_ticker, show_notification
 
-# Set page configuration with professional layout and theme
+# Theme configurations
+THEMES = {
+    "Mission Impossible": {
+        "primary_color": "#FF4B4B",
+        "secondary_color": "#1E1E1E",
+        "background_color": "#0A0A0A",
+        "text_color": "#FFFFFF",
+        "accent_color": "#00FF00",
+        "font": "Orbitron",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    },
+    "James Bond": {
+        "primary_color": "#FFD700",
+        "secondary_color": "#000000",
+        "background_color": "#1A1A1A",
+        "text_color": "#FFFFFF",
+        "accent_color": "#FF0000",
+        "font": "Playfair Display",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    },
+    "Matrix": {
+        "primary_color": "#00FF00",
+        "secondary_color": "#000000",
+        "background_color": "#0A0A0A",
+        "text_color": "#00FF00",
+        "accent_color": "#FFFFFF",
+        "font": "Courier New",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    },
+    "John Wick": {
+        "primary_color": "#FF0000",
+        "secondary_color": "#1A1A1A",
+        "background_color": "#000000",
+        "text_color": "#FFFFFF",
+        "accent_color": "#FFD700",
+        "font": "Roboto",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    },
+    "Die Hard": {
+        "primary_color": "#FFA500",
+        "secondary_color": "#2C2C2C",
+        "background_color": "#1A1A1A",
+        "text_color": "#FFFFFF",
+        "accent_color": "#FF4500",
+        "font": "Impact",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    },
+    "Terminator": {
+        "primary_color": "#FF0000",
+        "secondary_color": "#000000",
+        "background_color": "#1A1A1A",
+        "text_color": "#FFFFFF",
+        "accent_color": "#808080",
+        "font": "Orbitron",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    },
+    "Mad Max": {
+        "primary_color": "#FFD700",
+        "secondary_color": "#8B4513",
+        "background_color": "#2C2C2C",
+        "text_color": "#FFFFFF",
+        "accent_color": "#FF4500",
+        "font": "Road Rage",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    },
+    "Fast & Furious": {
+        "primary_color": "#FF0000",
+        "secondary_color": "#000000",
+        "background_color": "#1A1A1A",
+        "text_color": "#FFFFFF",
+        "accent_color": "#FFD700",
+        "font": "Racing Sans One",
+        "gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "loading_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "success_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif",
+        "background_gif": "https://media.giphy.com/media/3o7TKz2eMXx7dn95FS/giphy.gif"
+    }
+}
+
+def show_notification(type, message):
+    """Show a themed notification with animation"""
+    theme = st.session_state.current_theme
+    theme_config = THEMES[theme]
+    
+    if type == "success":
+        st.markdown(f"""
+        <div style="background-color: {theme_config['secondary_color']}; 
+                    border-left: 5px solid {theme_config['accent_color']}; 
+                    padding: 15px; 
+                    margin: 10px 0; 
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;">
+            <img src="{theme_config['success_gif']}" style="width: 50px; height: 50px; border-radius: 5px;">
+            <div>
+                <h4 style="color: {theme_config['accent_color']}; margin: 0;">✅ Success!</h4>
+                <p style="color: {theme_config['text_color']}; margin: 5px 0 0 0;">{message}</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    elif type == "error":
+        st.markdown(f"""
+        <div style="background-color: {theme_config['secondary_color']}; 
+                    border-left: 5px solid #FF0000; 
+                    padding: 15px; 
+                    margin: 10px 0; 
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;">
+            <img src="{theme_config['loading_gif']}" style="width: 50px; height: 50px; border-radius: 5px;">
+            <div>
+                <h4 style="color: #FF0000; margin: 0;">❌ Error!</h4>
+                <p style="color: {theme_config['text_color']}; margin: 5px 0 0 0;">{message}</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:  # info
+        st.markdown(f"""
+        <div style="background-color: {theme_config['secondary_color']}; 
+                    border-left: 5px solid {theme_config['primary_color']}; 
+                    padding: 15px; 
+                    margin: 10px 0; 
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;">
+            <img src="{theme_config['loading_gif']}" style="width: 50px; height: 50px; border-radius: 5px;">
+            <div>
+                <h4 style="color: {theme_config['primary_color']}; margin: 0;">ℹ️ Info</h4>
+                <p style="color: {theme_config['text_color']}; margin: 5px 0 0 0;">{message}</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+def show_loading_animation(message="Processing..."):
+    """Show a themed loading animation"""
+    theme = st.session_state.current_theme
+    theme_config = THEMES[theme]
+    
+    st.markdown(f"""
+    <div style="background-color: {theme_config['secondary_color']}; 
+                padding: 20px; 
+                margin: 10px 0; 
+                border-radius: 8px;
+                text-align: center;">
+        <img src="{theme_config['loading_gif']}" 
+             style="width: 100px; height: 100px; border-radius: 10px; margin-bottom: 15px;">
+        <h4 style="color: {theme_config['primary_color']}; margin: 0;">{message}</h4>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Initialize session state for theme if not exists
+if 'current_theme' not in st.session_state:
+    st.session_state.current_theme = "Mission Impossible"
+
+# Set page configuration with professional layout
 st.set_page_config(
     page_title="Financial ML Pipeline Pro",
     page_icon="📈",
@@ -24,381 +202,165 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom ChromaWave theme configuration
-st.markdown("""
-<style>
-    /* ChromaWave theme colors */
-    :root {
-        --primary-color: #6366F1;
-        --secondary-color: #4F46E5;
-        --background-color: #F9FAFB;
-        --text-color: #111827;
-        --accent-color: #8B5CF6;
-        --success-color: #10B981;
-        --warning-color: #F59E0B;
-        --error-color: #EF4444;
-        --info-color: #3B82F6;
-        --gradient-start: #6366F1;
-        --gradient-end: #8B5CF6;
-        --card-bg: rgba(255, 255, 255, 0.9);
-        --dark-bg: #1F2937;
-    }
-    
-    /* Main interface styling with subtle gradient */
-    .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        background-color: var(--background-color);
-        background-image: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-    }
-    
-    /* Sidebar styling with subtle gradient */
-    section[data-testid="stSidebar"] > div {
-        background-image: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
-        border-right: 1px solid rgba(99, 102, 241, 0.1);
-        padding-top: 1rem;
-    }
-    
-    /* Glassmorphism effect for cards */
-    .card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
-    
-    /* Modernized button styling */
-    .stButton > button {
-        font-weight: 500;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-        color: white;
-        border: none !important;
-        padding: 0.5rem 1rem;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
-        background-image: linear-gradient(to right, var(--gradient-end), var(--gradient-start));
-    }
-    
-    /* Card styling */
-    div.stAlert {
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        border: none;
-    }
-    
-    /* Step progress styling */
-    .step-container {
-        margin: 20px 0;
-        padding: 15px;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Headers & Text */
-    h1, h2, h3 {
-        color: var(--text-color);
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-    
-    h4, h5, h6 {
-        color: var(--accent-color);
-        font-weight: 600;
-        letter-spacing: -0.01em;
-    }
-    
-    /* Metric styling */
-    [data-testid="stMetricValue"] {
-        font-weight: bold;
-        background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    /* Container styling */
-    div.stTabs [data-baseweb="tab-panel"] {
-        padding: 1rem;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Plotly chart styling */
-    div[data-testid="stPlotlyChart"] {
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-        background-color: white;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(99, 102, 241, 0.1);
-    }
-    
-    /* Animation styling */
-    .animation-container {
-        display: flex;
-        justify-content: center;
-        margin: 20px 0;
-    }
-    
-    .animation-container img {
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        transition: transform 0.3s ease;
-    }
-    
-    .animation-container img:hover {
-        transform: scale(1.02);
-    }
-    
-    /* Custom alert messages */
-    .stAlert-success {
-        background-color: var(--success-color);
-        color: white;
-        border-radius: 12px;
-    }
-    
-    .stAlert-warning {
-        background-color: var(--warning-color);
-        color: white;
-        border-radius: 12px;
-    }
-    
-    .stAlert-error {
-        background-color: var(--error-color);
-        color: white;
-        border-radius: 12px;
-    }
-    
-    .stAlert-info {
-        background-color: var(--info-color);
-        color: white;
-        border-radius: 12px;
-    }
-    
-    /* Form elements styling */
-    .stSelectbox > div,
-    .stNumberInput > div,
-    .stTextInput > div,
-    .stFileUploader > div {
-        border-radius: 10px;
-        border: 1px solid rgba(99, 102, 241, 0.2);
-        transition: all 0.2s ease;
-    }
-    
-    .stSelectbox > div:hover,
-    .stNumberInput > div:hover,
-    .stTextInput > div:hover,
-    .stFileUploader > div:hover {
-        border: 1px solid var(--accent-color);
-        box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
-    }
-    
-    /* Data frame styling */
-    [data-testid="stDataFrame"] {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-    
-    [data-testid="stDataFrame"] table {
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    
-    [data-testid="stDataFrame"] th {
-        background-color: rgba(99, 102, 241, 0.1);
-        color: var(--text-color);
-        font-weight: 600;
-    }
-    
-    /* Progress bar styling */
-    progress {
-        background-color: #E5E7EB;
-        border-radius: 10px;
-        height: 8px;
-    }
-    
-    progress::-webkit-progress-bar {
-        background-color: #E5E7EB;
-        border-radius: 10px;
-        height: 8px;
-    }
-    
-    progress::-webkit-progress-value {
-        background-image: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-        border-radius: 10px;
-    }
-</style>
-""", unsafe_allow_html=True)
+# Apply custom CSS for theme-based styling
+def apply_theme_style(theme):
+    theme_config = THEMES[theme]
+    st.markdown(f"""
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family={theme_config['font'].replace(' ', '+')}&display=swap');
+        
+        /* Main interface styling */
+        .main .block-container {{
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            background-color: {theme_config['background_color']};
+            color: {theme_config['text_color']};
+            font-family: '{theme_config['font']}', sans-serif;
+        }}
+        
+        /* Sidebar styling */
+        section[data-testid="stSidebar"] {{
+            background-color: {theme_config['secondary_color']};
+            color: {theme_config['text_color']};
+        }}
+        
+        /* Button styling */
+        .stButton > button {{
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background-color: {theme_config['primary_color']};
+            color: {theme_config['text_color']};
+            border: 2px solid {theme_config['accent_color']};
+        }}
+        
+        .stButton > button:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px {theme_config['accent_color']};
+        }}
+        
+        /* Card styling */
+        div.stAlert {{
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: {theme_config['secondary_color']};
+            color: {theme_config['text_color']};
+        }}
+        
+        /* Headers & Text */
+        h1, h2, h3 {{
+            color: {theme_config['primary_color']};
+            font-family: '{theme_config['font']}', sans-serif;
+        }}
+        
+        h4, h5, h6 {{
+            color: {theme_config['accent_color']};
+            font-family: '{theme_config['font']}', sans-serif;
+        }}
+        
+        /* Metric styling */
+        [data-testid="stMetricValue"] {{
+            font-weight: bold;
+            color: {theme_config['primary_color']};
+        }}
+        
+        /* Container styling */
+        div.stTabs [data-baseweb="tab-panel"] {{
+            padding-top: 1rem;
+            background-color: {theme_config['background_color']};
+        }}
+        
+        /* Plotly chart styling */
+        div[data-testid="stPlotlyChart"] {{
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            background-color: {theme_config['secondary_color']};
+        }}
+        
+        /* Animation styling */
+        .animation-container {{
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }}
+        
+        .animation-container img {{
+            border-radius: 10px;
+            box-shadow: 0 4px 8px {theme_config['accent_color']};
+        }}
+        
+        /* Theme-specific animations */
+        .theme-animation {{
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px {theme_config['accent_color']};
+        }}
+    </style>
+    """, unsafe_allow_html=True)
 
-# Add ChromaWave-specific styling
-st.markdown("""
-<style>
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+# Apply the current theme
+apply_theme_style(st.session_state.current_theme)
+
+# Add theme selector in the sidebar
+with st.sidebar:
+    st.markdown("<div style='text-align: center; margin-bottom: 20px;'>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #1E88E5;'>ML Pipeline Navigator</h2>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Theme selector
+    st.markdown("### 🎨 Theme Selector")
+    
+    # Theme descriptions
+    theme_descriptions = {
+        "Mission Impossible": "High-tech espionage theme with red accents and futuristic fonts",
+        "James Bond": "Classic spy theme with gold and black, featuring elegant typography",
+        "Matrix": "Cyberpunk theme with green-on-black and digital fonts",
+        "John Wick": "Intense action theme with red and gold accents",
+        "Die Hard": "Classic action theme with orange and dark accents",
+        "Terminator": "Futuristic theme with red and metallic accents",
+        "Mad Max": "Post-apocalyptic theme with desert colors and rugged fonts",
+        "Fast & Furious": "High-octane racing theme with red and gold accents"
     }
     
-    .sub-header {
-        font-size: 1.8rem;
-        font-weight: 600;
-        color: var(--secondary-color);
-        margin-top: 1rem;
-        margin-bottom: 1.5rem;
-        letter-spacing: -0.01em;
-    }
+    # Create a more visually appealing theme selector
+    st.markdown("""
+    <div style="background-color: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <p style="margin: 0; font-size: 0.9rem;">Choose your preferred action movie theme to customize the app's appearance.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    .card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(99, 102, 241, 0.1);
-        padding: 25px;
-        margin-bottom: 25px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+    selected_theme = st.selectbox(
+        "Select Theme:",
+        list(THEMES.keys()),
+        index=list(THEMES.keys()).index(st.session_state.current_theme)
+    )
     
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
-    }
+    if selected_theme != st.session_state.current_theme:
+        st.session_state.current_theme = selected_theme
+        apply_theme_style(selected_theme)
+        st.rerun()
     
-    .step-title {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-        padding: 15px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        color: var(--primary-color);
-        font-weight: 600;
-        border-left: 4px solid var(--primary-color);
-    }
+    # Display theme preview and description
+    st.markdown(f"""
+    <div style="background-color: {THEMES[selected_theme]['secondary_color']}; 
+                padding: 15px; 
+                border-radius: 8px; 
+                margin-top: 15px;">
+        <h4 style="color: {THEMES[selected_theme]['primary_color']}; margin-top: 0;">Theme Preview</h4>
+        <img src="{THEMES[selected_theme]['background_gif']}" 
+             style="width: 100%; border-radius: 5px; margin-bottom: 10px;">
+        <p style="color: {THEMES[selected_theme]['text_color']}; 
+                  font-size: 0.9rem; 
+                  margin: 0;">
+            {theme_descriptions[selected_theme]}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    .highlight {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-        padding: 5px 8px;
-        border-radius: 6px;
-        color: var(--primary-color);
-        font-weight: 500;
-    }
-    
-    .sidebar .decoration {
-        margin: 30px 0;
-        text-align: center;
-    }
-    
-    .step-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-        color: var(--primary-color);
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        font-weight: bold;
-        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
-        transition: all 0.3s ease;
-    }
-    
-    .step-indicator:hover {
-        transform: scale(1.1);
-    }
-    
-    .complete {
-        background: var(--success-color);
-        color: white;
-    }
-    
-    .current {
-        background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-        color: white;
-    }
-    
-    /* New feature badges */
-    .feature-badge {
-        display: inline-block;
-        background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-        color: white;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-left: 8px;
-        box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3);
-    }
-    
-    /* Tooltip-style info boxes */
-    .info-tooltip {
-        position: relative;
-        display: inline-block;
-        background-color: rgba(99, 102, 241, 0.1);
-        color: var(--primary-color);
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px 0;
-        border-left: 4px solid var(--primary-color);
-    }
-    
-    .info-tooltip::before {
-        content: 'ℹ️';
-        margin-right: 8px;
-        font-weight: bold;
-    }
-    
-    /* Enhanced stat cards */
-    .stat-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        padding: 15px;
-        border-top: 4px solid var(--primary-color);
-        transition: all 0.3s ease;
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
-    }
-    
-    .stat-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .stat-label {
-        color: var(--text-color);
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-top: 5px;
-    }
-</style>
-""", unsafe_allow_html=True)
+    st.markdown("---")
 
 # Initialize session state variables if they don't exist
 if 'data' not in st.session_state:
@@ -514,24 +476,16 @@ with st.sidebar:
         """, unsafe_allow_html=True)
         
         # Add professional step indicator in sidebar
-        # Enhanced ChromaWave Steps Card
-        st.markdown("<div class='card' style='padding: 20px; margin-top: 20px;'>", unsafe_allow_html=True)
+        st.markdown("<div class='card' style='padding: 15px; margin-top: 20px;'>", unsafe_allow_html=True)
         st.markdown("<div class='step-title'>Pipeline Steps</div>", unsafe_allow_html=True)
         
-        # List the steps with detailed descriptions
-        steps = [
-            {"name": "Load Data", "description": "Import financial data from Yahoo Finance or CSV files"},
-            {"name": "Preprocessing", "description": "Clean data and handle missing values"},
-            {"name": "Feature Engineering", "description": "Create and select important features"},
-            {"name": "Train/Test Split", "description": "Divide data for training and validation"},
-            {"name": "Model Training", "description": "Train regression or classification models"},
-            {"name": "Evaluation", "description": "Analyze model performance metrics"},
-            {"name": "Results", "description": "Visualize predictions and insights"}
-        ]
+        # List the steps
+        steps = ["Load Data", "Preprocessing", "Feature Engineering", 
+                 "Train/Test Split", "Model Training", "Evaluation", "Results"]
         
-        # Create ChromaWave-styled step indicator
+        # Create a professional step indicator
         st.markdown("""
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
         """, unsafe_allow_html=True)
         
         for i, step in enumerate(steps, 1):
@@ -539,101 +493,30 @@ with st.sidebar:
             if i < st.session_state.step:
                 status_class = "complete"
                 icon = "✓"
-                line_color = "var(--success-color)"  # Green for completed
-                opacity = "1"
+                line_color = "#4CAF50"  # Green for completed
             elif i == st.session_state.step:
                 status_class = "current"
                 icon = str(i)
-                line_color = "var(--gradient-start)"  # Primary for current
-                opacity = "1"
+                line_color = "#1E88E5"  # Blue for current
             else:
                 status_class = ""
                 icon = str(i)
                 line_color = "#E0E0E0"  # Gray for future
-                opacity = "0.6"
             
-            # Add gradient connector line
-            connector_style = "display: none;" if i == len(steps) else ""
+            # Last step doesn't need a connector line
+            connector_line = "" if i == len(steps) else f"""
+            <div style="position: absolute; top: 17px; left: 30px; height: 30px; width: 2px; background-color: {line_color};"></div>
+            """
             
             st.markdown(f"""
-            <div style="display: flex; position: relative; margin-bottom: 10px; opacity: {opacity}; transition: all 0.3s ease;">
-                <div class="step-indicator {status_class}" style="z-index: 2; flex-shrink: 0;">{icon}</div>
-                <div style="margin-left: 15px;">
-                    <div style="font-weight: 600; font-size: 1rem;">{step['name']}</div>
-                    <div style="font-size: 0.85rem; color: var(--text-color); opacity: 0.8; margin-top: 2px;">{step['description']}</div>
-                </div>
-                <div style="position: absolute; top: 36px; left: 18px; height: 30px; width: 2px; background-color: {line_color}; {connector_style}"></div>
+            <div style="display: flex; align-items: center; position: relative; margin-bottom: 8px;">
+                <div class="step-indicator {status_class}" style="z-index: 2;">{icon}</div>
+                <div style="margin-left: 15px; font-weight: 500;">{step}</div>
+                {connector_line}
             </div>
             """, unsafe_allow_html=True)
         
         st.markdown("</div>", unsafe_allow_html=True)
-        
-        # Add ML Pipeline options
-        st.markdown("<div class='step-title' style='margin-top: 30px;'>Options & Settings</div>", unsafe_allow_html=True)
-        
-        # Model selection
-        model_options = {
-            "Linear Regression": "For continuous target prediction",
-            "Logistic Regression": "For binary classification tasks",
-            "K-Means Clustering": "For identifying patterns"
-        }
-        
-        selected_model = st.selectbox(
-            "Model Type",
-            options=list(model_options.keys()),
-            index=0,
-            format_func=lambda x: f"{x} - {model_options[x]}"
-        )
-        
-        # Feature engineering options
-        if st.session_state.step >= 2:
-            st.markdown("<div class='info-tooltip'>Choose technical indicators to include in your model</div>", unsafe_allow_html=True)
-            tech_indicators = st.multiselect(
-                "Technical Indicators",
-                options=["Moving Averages", "RSI", "MACD", "Bollinger Bands", "Volume Features"],
-                default=["Moving Averages", "RSI"],
-                help="Select technical indicators to generate for financial data"
-            )
-        
-        # Data preprocessing options
-        if st.session_state.step >= 1:
-            preprocessing_options = st.expander("Advanced Preprocessing", expanded=False)
-            with preprocessing_options:
-                missing_val_method = st.radio(
-                    "Handle Missing Values",
-                    options=["Drop rows with missing values", "Fill numeric with mean", "Fill with median", "Fill with mode"],
-                    index=0
-                )
-                handle_outliers = st.checkbox("Remove Outliers", value=False, 
-                                            help="Use IQR method to detect and remove outliers")
-                normalize_data = st.checkbox("Normalize Features", value=True,
-                                           help="Scale numeric features to 0-1 range")
-        
-        # Model hyperparameters
-        if st.session_state.step >= 4:
-            model_params = st.expander("Model Hyperparameters", expanded=False)
-            with model_params:
-                if selected_model == "Linear Regression":
-                    fit_intercept = st.checkbox("Fit Intercept", value=True)
-                    normalize = st.checkbox("Normalize", value=False)
-                elif selected_model == "Logistic Regression":
-                    C_value = st.slider("Regularization Strength (C)", 0.01, 10.0, 1.0, 0.01, 
-                                      help="Lower values specify stronger regularization")
-                    max_iter = st.number_input("Max Iterations", 100, 1000, 200, 50)
-                elif selected_model == "K-Means Clustering":
-                    n_clusters = st.slider("Number of Clusters", 2, 10, 3, 1)
-                    n_init = st.number_input("Number of Initializations", 5, 20, 10, 1)
-        
-        # Add preset templates
-        st.markdown("<div class='step-title' style='margin-top: 20px;'>Quick Presets</div>", unsafe_allow_html=True)
-        preset_cols = st.columns(3)
-        with preset_cols[0]:
-            st.button("Stock Price Prediction", use_container_width=True)
-        with preset_cols[1]:
-            st.button("Technical Analysis", use_container_width=True)
-        with preset_cols[2]:
-            st.button("Volatility Model", use_container_width=True)
-            
         st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='card' style='padding: 15px;'>", unsafe_allow_html=True)
@@ -1171,13 +1054,7 @@ if st.session_state.step >= 1:
             numeric_columns = data.select_dtypes(include=['number']).columns.tolist()
             
             # If it's Yahoo Finance data, suggest 'Close' as target by default
-            # Set a safe default for target variable
-            default_target = None
-            if st.session_state.data is not None and len(numeric_columns) > 0:
-                if st.session_state.data_source == "yahoo" and 'Close' in numeric_columns:
-                    default_target = 'Close'
-                else:
-                    default_target = numeric_columns[0]
+            default_target = 'Close' if st.session_state.data_source == "yahoo" and 'Close' in numeric_columns else numeric_columns[0] if numeric_columns else None
             
             target_variable = st.selectbox(
                 "Select Target Variable:",
@@ -1441,14 +1318,8 @@ if st.session_state.step >= 1:
                             
                             # Feature importance visualization
                             st.markdown("<h4 style='color: #424242; margin-top: 20px;'>Feature Importance</h4>", unsafe_allow_html=True)
-                            
-                            # Make sure we have feature names for visualization
-                            feature_names = list(st.session_state.X_train.columns) if st.session_state.X_train is not None else []
-                            if feature_names:
-                                fig = plot_feature_importance(model, feature_names)
-                                st.plotly_chart(fig, use_container_width=True)
-                            else:
-                                st.error("Feature importance visualization requires feature names. No feature data available.")
+                            fig = plot_feature_importance(model, st.session_state.X_train.columns)
+                            st.plotly_chart(fig, use_container_width=True)
                             
                         elif st.session_state.model_choice == "Logistic Regression":
                             if hasattr(model, 'coef_'):
@@ -1467,13 +1338,8 @@ if st.session_state.step >= 1:
                                 
                                 # Feature importance visualization
                                 st.markdown("<h4 style='color: #424242; margin-top: 20px;'>Feature Importance</h4>", unsafe_allow_html=True)
-                                # Make sure we have feature names for visualization
-                                feature_names = list(st.session_state.X_train.columns) if st.session_state.X_train is not None else []
-                                if feature_names:
-                                    fig = plot_feature_importance(model, feature_names)
-                                    st.plotly_chart(fig, use_container_width=True)
-                                else:
-                                    st.error("Feature importance visualization requires feature names. No feature data available.")
+                                fig = plot_feature_importance(model, st.session_state.X_train.columns)
+                                st.plotly_chart(fig, use_container_width=True)
                             
                         elif st.session_state.model_choice == "K-Means Clustering":
                             # Create columns for better layout
@@ -2102,17 +1968,12 @@ if st.session_state.step >= 1:
                     
                     # Add a feature importance plot
                     st.markdown("#### Feature Importance")
-                    # Make sure we have feature names for visualization
-                    feature_names = list(st.session_state.X_train.columns) if st.session_state.X_train is not None else []
-                    if feature_names:
-                        feature_fig = plot_feature_importance(st.session_state.model, feature_names)
-                        feature_fig.update_layout(
-                            plot_bgcolor='rgba(240,240,240,0.2)',
-                            height=400
-                        )
-                        st.plotly_chart(feature_fig, use_container_width=True)
-                    else:
-                        st.error("Feature importance visualization requires feature names. No feature data available.")
+                    feature_fig = plot_feature_importance(st.session_state.model, st.session_state.X_train.columns)
+                    feature_fig.update_layout(
+                        plot_bgcolor='rgba(240,240,240,0.2)',
+                        height=400
+                    )
+                    st.plotly_chart(feature_fig, use_container_width=True)
                 
             elif st.session_state.model_choice == "Logistic Regression":
                 # Create tabs for different visualizations
@@ -2513,68 +2374,16 @@ if st.session_state.step >= 1:
             
             with download_tabs[2]:
                 st.markdown("#### Export Visualizations")
-                
                 st.markdown("""
-                <div style="padding: 25px; background-color: rgba(99, 102, 241, 0.1); border-radius: 12px; margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
-                    <h4 style="margin-top: 0; color: var(--primary-color);">How to Export Visualizations</h4>
-                    <p>All charts in this application can be easily exported as PNG images:</p>
-                    
-                    <div style="display: flex; align-items: center; margin: 15px 0; background-color: white; padding: 12px; border-radius: 8px;">
-                        <div style="background-color: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">1</div>
-                        <div><strong>Hover over any chart</strong> to reveal the toolbar in the top-right corner</div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; margin: 15px 0; background-color: white; padding: 12px; border-radius: 8px;">
-                        <div style="background-color: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">2</div>
-                        <div><strong>Click the camera icon</strong> in the toolbar to download the visualization as a PNG image</div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; margin: 15px 0; background-color: white; padding: 12px; border-radius: 8px;">
-                        <div style="background-color: var(--primary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">3</div>
-                        <div><strong>The image will be saved</strong> to your downloads folder</div>
-                    </div>
-                    
-                    <div style="background-color: rgba(66, 66, 66, 0.1); padding: 15px; border-radius: 8px; margin-top: 20px;">
-                        <h5 style="margin-top: 0; color: #424242;">Additional Export Options</h5>
-                        <ul style="margin-bottom: 0;">
-                            <li>You can also click the <strong>menu icon</strong> (three horizontal lines) in the toolbar to access more options</li>
-                            <li>From this menu, you can export as SVG or WebP format</li>
-                            <li>You can also zoom, pan, and reset the view of the visualization</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div style="background-color: #E8F5E9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4CAF50;">
-                    <h5 style="margin-top: 0; color: #2E7D32;">Pro Tip</h5>
-                    <p style="margin-bottom: 0;">For reports and presentations, SVG format offers higher quality and scalability than PNG.</p>
-                </div>
+                <p style="color: #757575; font-size: 0.9rem; margin-bottom: 15px;">
+                    Click the camera icon in the top-right corner of any chart to download it as an image.
+                </p>
                 """, unsafe_allow_html=True)
                 
-                # Add local example of export functionality
-                st.markdown("<p style='text-align: center; margin: 20px 0;'><strong>Example Visualization Export</strong></p>", unsafe_allow_html=True)
-                
-                # Create a sample chart that users can practice exporting
-                sample_data = pd.DataFrame({
-                    'Month': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    'Return': [4.2, -2.1, 3.5, 5.9, -1.2, 4.8]
-                })
-                
-                fig = px.bar(
-                    sample_data, 
-                    x='Month', 
-                    y='Return',
-                    title="Example Chart (Try Exporting This)",
-                    color='Return',
-                    color_continuous_scale='RdBu_r',
-                    labels={'Return': 'Monthly Return (%)'},
-                    text='Return'
-                )
-                
-                fig.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
-                fig.update_layout(height=400)
-                
-                # Render the example chart
-                st.plotly_chart(fig, use_container_width=True)
+                # Display a sample image of how to download
+                st.image("https://docs.streamlit.io/images/export-plot.gif", 
+                        caption="Example: How to export visualizations", 
+                        use_column_width=True)
             
             st.markdown("</div>", unsafe_allow_html=True)
             
