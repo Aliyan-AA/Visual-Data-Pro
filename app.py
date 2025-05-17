@@ -16,6 +16,48 @@ from ml_pipeline import preprocess_data, feature_engineering, split_data, train_
 from visualizations import plot_missing_values, plot_split, plot_feature_importance, plot_regression_results, plot_classification_results, plot_clusters
 from utils import load_animation_url, validate_stock_ticker, show_notification
 
+# Initialize session state variables
+if 'step' not in st.session_state:
+    st.session_state.step = 0
+if 'data' not in st.session_state:
+    st.session_state.data = None
+if 'features' not in st.session_state:
+    st.session_state.features = None
+if 'target' not in st.session_state:
+    st.session_state.target = None
+if 'X_train' not in st.session_state:
+    st.session_state.X_train = None
+if 'X_test' not in st.session_state:
+    st.session_state.X_test = None
+if 'y_train' not in st.session_state:
+    st.session_state.y_train = None
+if 'y_test' not in st.session_state:
+    st.session_state.y_test = None
+if 'model' not in st.session_state:
+    st.session_state.model = None
+if 'evaluation_results' not in st.session_state:
+    st.session_state.evaluation_results = None
+if 'predictions' not in st.session_state:
+    st.session_state.predictions = None
+if 'data_source' not in st.session_state:
+    st.session_state.data_source = None
+if 'current_theme' not in st.session_state:
+    st.session_state.current_theme = "Angry Birds"
+if 'model_choice' not in st.session_state:
+    st.session_state.model_choice = "Linear Regression"
+if 'datasets' not in st.session_state:
+    st.session_state.datasets = {}
+if 'active_dataset' not in st.session_state:
+    st.session_state.active_dataset = None
+if 'models' not in st.session_state:
+    st.session_state.models = {}
+if 'evaluation_results_by_dataset' not in st.session_state:
+    st.session_state.evaluation_results_by_dataset = {}
+if 'comparison_mode' not in st.session_state:
+    st.session_state.comparison_mode = False
+if 'model_results_by_dataset' not in st.session_state:
+    st.session_state.model_results_by_dataset = {}
+
 # Theme configurations
 THEMES = {
     "Angry Birds": {
@@ -158,10 +200,6 @@ def show_error_animation(message="Oops! Something went wrong."):
         <p style="color: #B71C1C; margin: 5px 0;">Don't worry! Let's try again!</p>
     </div>
     """, unsafe_allow_html=True)
-
-# Initialize session state for theme if not exists
-if 'current_theme' not in st.session_state:
-    st.session_state.current_theme = "Angry Birds"
 
 # Set page configuration with child-friendly layout
 st.set_page_config(
@@ -309,46 +347,6 @@ if st.session_state.step == 0:
     """, unsafe_allow_html=True)
     
     st.markdown("</div>", unsafe_allow_html=True)
-
-# Initialize session state variables if they don't exist
-if 'data' not in st.session_state:
-    st.session_state.data = None
-if 'features' not in st.session_state:
-    st.session_state.features = None
-if 'target' not in st.session_state:
-    st.session_state.target = None
-if 'X_train' not in st.session_state:
-    st.session_state.X_train = None
-if 'X_test' not in st.session_state:
-    st.session_state.X_test = None
-if 'y_train' not in st.session_state:
-    st.session_state.y_train = None
-if 'y_test' not in st.session_state:
-    st.session_state.y_test = None
-if 'model' not in st.session_state:
-    st.session_state.model = None
-if 'step' not in st.session_state:
-    st.session_state.step = 0
-if 'evaluation_results' not in st.session_state:
-    st.session_state.evaluation_results = None
-if 'predictions' not in st.session_state:
-    st.session_state.predictions = None
-if 'data_source' not in st.session_state:
-    st.session_state.data_source = None
-
-# Variables for dataset comparison functionality
-if 'datasets' not in st.session_state:
-    st.session_state.datasets = {}  # Store multiple datasets
-if 'active_dataset' not in st.session_state:
-    st.session_state.active_dataset = None  # Currently active dataset
-if 'models' not in st.session_state:
-    st.session_state.models = {}  # Store trained models for each dataset
-if 'evaluation_results_by_dataset' not in st.session_state:
-    st.session_state.evaluation_results_by_dataset = {}  # Store evaluation results for each dataset
-if 'comparison_mode' not in st.session_state:
-    st.session_state.comparison_mode = False  # Toggle for comparison mode
-if 'model_results_by_dataset' not in st.session_state:
-    st.session_state.model_results_by_dataset = {}  # Track model performances for comparison
 
 # Main app header
 st.markdown("<div class='main-header'>Financial Machine Learning Pipeline Pro</div>", unsafe_allow_html=True)
